@@ -10,11 +10,12 @@ for(var i = 1; i < 13; i++){
   // console.log(imageNode.src);
 }
 
-// var elements = document.getElementsByClassName('draggable');
-// console.log(elements)
-// for(var i = 1; i < elements; i++){
-//  elements[i].style.position = 'absolute';
-// }
+function nearest(number, n) {
+  console.log('number:', number)
+  console.log('n:', n)
+  console.log('returning number: ', Math.round(number / n) * n);
+  return Math.round(number / n) * n;
+}
 
 // Obtain a node list of all elements that have class="draggable":
 var draggable = document.getElementsByClassName('draggable'),
@@ -38,6 +39,7 @@ function startDrag(evt) {
     function moveAlong(evt) {
         evt.preventDefault();
         var left = parseInt(evt.clientX - diffX);
+        console.log(':::::::::: ', left)
         var top = parseInt(evt.clientY - diffY);
 
         // check for screen boundaries
@@ -52,11 +54,20 @@ function startDrag(evt) {
         that.style.position = 'absolute';
         that.style.left = left + 'px';
         that.style.top = top + 'px';
+
+        
     }
 
     // stopDrag removes event listeners from the element,
     // thus stopping the drag:
     function stopDrag() {
+        // snap to grid
+        var left = parseInt(evt.clientX - that.offsetLeft);
+        console.log('@@@@@@@@@@@@@ ', left)
+        console.log('########### ', nearest(left, 5))
+        that.style.left = nearest(left, 5) + 'px';
+        console.log('%%%%%%%@@@@ ', that.style.left)
+
         document.removeEventListener('mousemove', moveAlong);
         document.removeEventListener('mouseup', stopDrag);
     }
@@ -73,3 +84,14 @@ function startDrag(evt) {
 if (draggableCount > 0) for (i = 0; i < draggableCount; i += 1) {
     draggable[i].addEventListener('mousedown', startDrag);
 }
+
+
+function snapToGrip (val,gridSize){
+    var snap_candidate = gridSize * Math.floor(val/gridSize);
+    if (val-snap_candidate < 2) {
+        return snap_candidate;
+    }
+    else {
+        return null;
+    }
+};
